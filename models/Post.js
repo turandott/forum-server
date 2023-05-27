@@ -1,6 +1,10 @@
 const { Sequelize, DataTypes } = require("sequelize");
-const database = require('./index');
+const Comment = require('./Comment');
 const sequelize = require("../config/dbConfig");
+const User = require("./User");
+const Category = require("./Category");
+const Category_Post = require("./Category_Post");
+
 
 const Post = sequelize.define('Post', {
     id: {
@@ -24,7 +28,6 @@ const Post = sequelize.define('Post', {
 
 
 })
-
+Post.belongsToMany(Category, { through: "Category_Post" });
 Post.hasMany(Comment, { as: "comments" });
-
-module.exports = User;
+module.exports = Post;

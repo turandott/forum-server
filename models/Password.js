@@ -1,21 +1,18 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const sequelize = require("../config/dbConfig");
-const Post = require("./Post");
-const Category_Post = require("./Category_Post");
 
-const Category = sequelize.define('Category', {
+const Password = sequelize.define('Password', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
         allowNull: false,
     },
-    name: {
+    password: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true
     },
-
+    
 })
-// Category.belongsToMany(Post, { through: "Category_Post" });
-module.exports = Category;
+
+module.exports = Password;
