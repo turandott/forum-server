@@ -1,9 +1,10 @@
-const { Sequelize, DataTypes } = require("sequelize");
+const { Sequelize, DataTypes, Model } = require("sequelize");
 const sequelize = require("../config/dbConfig");
 const Post = require("./Post");
-const Category_Post = require("./Category_Post");
+const Category_Post = require("./CategoryPost");
 
-const Category = sequelize.define('Category', {
+class Category extends Model { };
+Category.init({
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -15,7 +16,12 @@ const Category = sequelize.define('Category', {
         allowNull: false,
         unique: true
     },
+},
+    {
+        sequelize,
+        modelName: "category",
+        timestamps: false,
 
-})
+    })
 // Category.belongsToMany(Post, { through: "Category_Post" });
 module.exports = Category;

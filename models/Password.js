@@ -1,8 +1,10 @@
-const { Sequelize, DataTypes } = require("sequelize");
+const { Sequelize, DataTypes, Model } = require("sequelize");
 const sequelize = require("../config/dbConfig");
 
-const Password = sequelize.define('Password', {
-    id: {
+class Password extends Model { };
+
+Password.init({
+    userId: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
@@ -12,7 +14,13 @@ const Password = sequelize.define('Password', {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    
-})
+},
+    {
+        sequelize,
+        modelName: "password",
+        timestamps: false,
+    }
+
+)
 
 module.exports = Password;

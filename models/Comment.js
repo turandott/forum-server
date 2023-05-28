@@ -1,8 +1,10 @@
-const { Sequelize, DataTypes } = require("sequelize");
+const { Sequelize, DataTypes, Model } = require("sequelize");
 const sequelize = require("../config/dbConfig");
-const Post = require("./Post");
+// const Post = require("./Post");
 
-const Comment = sequelize.define('Comment', {
+class Comment extends Model { };
+
+Comment.init({
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -13,9 +15,21 @@ const Comment = sequelize.define('Comment', {
         type: DataTypes.TEXT,
         allowNull: false,
     },
+    userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+    commentId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+    },
+},
 
-
-})
+    {
+        sequelize,
+        modelName: 'comment',
+    }
+)
 
 
 module.exports = Comment;
