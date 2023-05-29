@@ -17,16 +17,17 @@ const corsOption = {
 
 const swaggerOptions = {
   swaggerDefinition: {
+    openapi: "3.0.0",
     info: {
       title: 'Forum API',
       version: '1.0.0',
-    }
+    },
   },
-  apis: ['app.js'],
+  apis: ['./routes/*.js'],
 };
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
-// console.log(swaggerDocs);
+console.log(swaggerDocs);
 
 
 //middleware
@@ -54,27 +55,6 @@ app.listen(PORT, () => {
 
 //swagger
 
-/**
- * @swagger
- * /users:
- *  get:
- *    description: Get all users
- *    responses:
- *      200:
- *        description: Success
- */
-app.get('/users', (req, res) => {
-  res.send([
-    {
-      id: 1,
-      firstName: 'John',
-      lastName: 'Smith',
-      password: '1234567',
-
-    }
-  ])
-});
-
 
 //CRUD routes
 app.use('/users', require('./routes/users'));
@@ -94,3 +74,4 @@ sequelize
     app.listen(3000);
   })
   .catch(err => console.log(err));
+
