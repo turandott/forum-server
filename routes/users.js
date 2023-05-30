@@ -1,6 +1,8 @@
 const controller = require('../controllers/userController');
 const router = require('express').Router();
-
+const express=require('express');
+const {signup, login} = controller;
+const userAuth = require('../middleware/userAuth');
 // CRUD Routes /users
 
 
@@ -31,6 +33,45 @@ const router = require('express').Router();
  *          type: string
  *          example: 'http://12345'
  */
+
+/**
+* @swagger
+* definitions:
+*  User:
+*    type: object
+*    properties:
+*      firstName: 
+*        type: string
+*      password:
+*        type: string
+*    required:
+*      - firstName
+*      - password
+*  LoginCredentials:
+*    type: object
+*    properties:
+*      firstName:
+*        type: string
+*      password:
+*        type: string
+*    required:
+*      - firstName
+*      - password
+*/
+
+/**
+* @swagger
+* components:
+*  securitySchemes:
+*    bearerAuth:            
+*      type: http
+*      scheme: bearer
+*      bearerFormat: JWT    
+*security:
+*  - bearerAuth: [] 
+*/
+
+
 
 /**
  * @swagger
@@ -181,5 +222,71 @@ router.put('/:userId', controller.updateUser); // /users/:userId
 
 router.delete('/:userId', controller.deleteUser); // /users/:userId
 
+
+
+
+/**
+ * @swagger
+ * tags:
+ *   name: Authorization
+ *   description: User management
+ */
+
+
+/**
+ * @swagger
+*  /signup:
+*   post:
+*      summary: Create a new user account
+*      consumes:
+*        - application/json
+*      produces:
+*        - application/json
+*      parameters:
+*        - in: body
+*          name: user
+*          description: The user to create.
+*          schema:
+*            $ref: '#/definitions/User'
+*      responses:
+*        '200':
+*          description: User created successfully.
+*        '400':
+*          description: Invalid request body.
+*/
+
+
+
+//signup endpoint
+//passing the middleware function to the signup
+router.post('/signup', userAuth.saveUser, signup)
+
+
+
+
+/**
+* @swagger
+* /login:
+*    post:
+*      summary: Authenticate a user and return a JWT token.
+*      consumes:
+*        - application/json
+*      produces:
+*        - application/json
+*      parameters:
+*        - in: body
+*          name: credentials
+*          description: The user's login credentials.
+*          schema:
+*            $ref: '#/definitions/LoginCredentials'
+*      responses:
+*        '200':
+*          description: JWT token returned successfully.
+*        '401':
+*          description: Invalid login credentials.
+*/
+
+//login route
+router.post('/login', login )
 
 module.exports = router;

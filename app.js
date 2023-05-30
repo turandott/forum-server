@@ -5,8 +5,8 @@ const bodyparser = require('body-parser');
 const User = require('./models/User');
 const swaggerUI = require('swagger-ui-express');
 const swaggerJsDoc = require('swagger-jsdoc');
-
-
+const cookieParser = require('cookie-parser');
+const userRoutes = require('./routes/users');
 
 const app = express();
 
@@ -34,6 +34,7 @@ console.log(swaggerDocs);
 app.use(cors(corsOption));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use('/swagger', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 
 //testing api
@@ -57,7 +58,7 @@ app.listen(PORT, () => {
 
 
 //CRUD routes
-app.use('/users', require('./routes/users'));
+app.use('/users', userRoutes);
 
 //error handling
 app.use((error, req, res, next) => {
