@@ -7,7 +7,8 @@ const swaggerUI = require('swagger-ui-express');
 const swaggerJsDoc = require('swagger-jsdoc');
 const cookieParser = require('cookie-parser');
 const userRoutes = require('./routes/users');
-
+const PORT = process.env.PORT || 8080
+const db = require('./models');
 const app = express();
 
 const corsOption = {
@@ -36,29 +37,25 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use('/swagger', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
+//CRUD routes
+app.use('/users', userRoutes);
+
 
 //testing api
-
 app.get('/', (req, res) => {
   res.json({ message: 'Hello world' })
 })
 
 //port
 
-const PORT = process.env.PORT || 8080
 
 //server
 
-app.listen(PORT, () => {
-  console.log(`server running in port ${PORT}`)
-})
+// app.listen(PORT, () => {
+//   console.log(`server running in port ${PORT}`)
+// })
 
 
-//swagger
-
-
-//CRUD routes
-app.use('/users', userRoutes);
 
 //error handling
 app.use((error, req, res, next) => {
@@ -68,11 +65,11 @@ app.use((error, req, res, next) => {
   res.status(status).json({ message: message });
 });
 
-sequelize
+db.sequelize
   .sync()
   .then(result => {
     console.log("Database connected");
-    app.listen(3000);
+    app.listen(PORT);
   })
   .catch(err => console.log(err));
 

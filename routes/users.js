@@ -223,38 +223,35 @@ router.put('/:userId', controller.updateUser); // /users/:userId
 router.delete('/:userId', controller.deleteUser); // /users/:userId
 
 
-
-
 /**
- * @swagger
- * tags:
- *   name: Authorization
- *   description: User management
- */
-
-
-/**
- * @swagger
-*  /signup:
-*   post:
-*      summary: Create a new user account
-*      consumes:
-*        - application/json
-*      produces:
-*        - application/json
-*      parameters:
-*        - in: body
-*          name: user
-*          description: The user to create.
-*          schema:
-*            $ref: '#/definitions/User'
-*      responses:
-*        '200':
-*          description: User created successfully.
-*        '400':
-*          description: Invalid request body.
+* @swagger
+* tags:
+*   name: Authorization
+*   description: User management
 */
 
+/**
+ * @swagger
+ * /signup:
+ *   post:
+ *     summary: Create a new user account
+ *     tags: [Authorization]
+ *     consumes:
+ *       - application/json
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: body
+ *         name: user
+ *         description: The user to create.
+ *         schema:
+ *           $ref: '#/definitions/User'
+ *     responses:
+ *       '200':
+ *         description: User created successfully.
+ *       '400':
+ *         description: Invalid request body.
+ */
 
 
 //signup endpoint
@@ -269,6 +266,7 @@ router.post('/signup', userAuth.saveUser, signup)
 * /login:
 *    post:
 *      summary: Authenticate a user and return a JWT token.
+*      tags: [Authorization]
 *      consumes:
 *        - application/json
 *      produces:

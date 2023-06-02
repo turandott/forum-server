@@ -1,4 +1,6 @@
-const User = require('../models/User');
+const db=require('../models');
+const User = db.user;
+const Password = db.password;
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -91,7 +93,12 @@ exports.login = async (req, res) => {
 
 
 exports.getUsers = (req, res, next) => {
-    User.findAll()
+    User.findAll({
+        include: [{
+            model: Password,
+            attributes: ['password']
+        }]
+    })
         .then(users => {
             res.status(200).json({ users: users });
         })
@@ -118,14 +125,23 @@ exports.createUser = (req, res, next) => {
     User.create({
         firstName: firstName,
         email: email,
-        password: password,
     })
         .then(result => {
             console.log('Created User');
-            res.status(201).json({
-                message: 'User created successfully!',
-                user: result
-            });
+            // create a new password record with the user ID and password
+            Password.create({
+                password: password
+            })
+                .then(() => {
+                    console.log('Saved Password');
+                    res.status(201).json({
+                        message: 'User created successfully!',
+                        user: result
+                    });
+                })
+                .catch(err => {
+                    console.log(err);
+                });
         })
         .catch(err => {
             console.log(err);
