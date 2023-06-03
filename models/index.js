@@ -17,9 +17,9 @@ db.comment = require("./Comment.js")(sequelize, Sequelize, Sequelize.DataTypes);
 db.category = require("./Category")(sequelize, Sequelize, Sequelize.DataTypes);
 
 db.user.hasOne(db.password, {
-    foreignKey: "userId",
+    onDelete: "cascade",
+    onUpdate: "cascade",
 })
-db.password.belongsTo(db.user)
 
 
 db.user.hasMany(db.post)
@@ -45,13 +45,13 @@ db.user.belongsToMany(db.user, {
     through: "follow",
     foreignKey: "userId",
     as: 'followed',
-    
+
 })
 db.user.belongsToMany(db.user, {
     through: "follow",
     foreignKey: "userId",
     as: 'followers',
-    
+
 })
 
 module.exports = db;

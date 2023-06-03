@@ -1,4 +1,4 @@
-const db=require('../models');
+const db = require('../models');
 const User = db.user;
 const Password = db.password;
 const bcrypt = require("bcrypt");
@@ -107,12 +107,19 @@ exports.getUsers = (req, res, next) => {
 
 exports.getUser = (req, res, next) => {
     const userId = req.params.userId;
-    User.findByPk(userId)
+    User.findByPk(userId, {
+        include: [{
+            model: Password,
+            attributes: ['password']
+        }]
+    })
         .then(user => {
             if (!user) {
                 return res.status(404).json({ message: 'User no found' });
-
             }
+            user.getPassword().then(password => {
+                console.log(password);
+            })
             res.status(200).json({ user: user });
         })
         .catch(err => console.log(err));
@@ -120,23 +127,26 @@ exports.getUser = (req, res, next) => {
 
 exports.createUser = (req, res, next) => {
     const firstName = req.body.firstName;
+    const lastName = req.body.lastName;
     const email = req.body.email;
     const password = req.body.password;
+
     User.create({
         firstName: firstName,
         email: email,
+        lastName: lastName,
     })
-        .then(result => {
-            console.log('Created User');
+        .then(user => {
             // create a new password record with the user ID and password
             Password.create({
                 password: password
             })
-                .then(() => {
+                .then(password => {
+                    user.setPassword(password);
                     console.log('Saved Password');
                     res.status(201).json({
                         message: 'User created successfully!',
-                        user: result
+                        user: user
                     });
                 })
                 .catch(err => {
@@ -162,6 +172,17 @@ exports.updateUser = (req, res, next) => {
             user.firstName = updatedFirstName;
             user.email = updatedEmail;
             user.password = updatePassword;
+            Password.findOne({ where: { userId: userId } })
+                .then(password => {
+                    if (!password) {
+                        return res.status(404).json({ message: 'Password record not found!' });
+                    }
+                    password.password = updatePassword;
+                    return password.save();
+                })
+                .then(result => {
+                    res.status(200).json({ message: 'Password updated!', password: result });
+                })
             return user.save();
         })
         .then(result => {

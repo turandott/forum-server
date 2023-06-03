@@ -7,6 +7,7 @@ const swaggerUI = require('swagger-ui-express');
 const swaggerJsDoc = require('swagger-jsdoc');
 const cookieParser = require('cookie-parser');
 const userRoutes = require('./routes/users');
+const postRoutes = require('./routes/posts');
 const PORT = process.env.PORT || 8080
 const db = require('./models');
 const app = express();
@@ -39,23 +40,13 @@ app.use(cookieParser());
 app.use('/swagger', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 //CRUD routes
 app.use('/users', userRoutes);
+app.use('/posts', postRoutes);
 
 
 //testing api
 app.get('/', (req, res) => {
   res.json({ message: 'Hello world' })
 })
-
-//port
-
-
-//server
-
-// app.listen(PORT, () => {
-//   console.log(`server running in port ${PORT}`)
-// })
-
-
 
 //error handling
 app.use((error, req, res, next) => {
