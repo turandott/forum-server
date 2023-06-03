@@ -10,6 +10,7 @@ const userRoutes = require('./routes/users');
 const postRoutes = require('./routes/posts');
 const PORT = process.env.PORT || 8080
 const db = require('./models');
+
 const app = express();
 
 const corsOption = {
@@ -38,10 +39,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use('/swagger', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
-//CRUD routes
-app.use('/users', userRoutes);
-app.use('/posts', postRoutes);
 
+//routes
+app.use('/', require('./routes'));
 
 //testing api
 app.get('/', (req, res) => {

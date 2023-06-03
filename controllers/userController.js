@@ -1,5 +1,6 @@
 const db = require('../models');
 const User = db.user;
+const Post = db.post;
 const Password = db.password;
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -157,6 +158,19 @@ exports.createUser = (req, res, next) => {
             console.log(err);
         });
 }
+
+//get all user posts
+exports.getUsersPosts = (req, res, next) => {
+    Post.findAll({ where: { userId: req.params.userId } })
+        .then(posts => {
+            if (!posts || posts.length === 0) {
+                return res.status(404).json({ message: 'No posts found for user' });
+            }
+
+            res.status(200).json({ posts: posts });
+        })
+        .catch(err => console.log(err));
+};
 
 
 exports.updateUser = (req, res, next) => {

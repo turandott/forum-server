@@ -22,7 +22,9 @@ db.user.hasOne(db.password, {
 })
 
 
-db.user.hasMany(db.post)
+db.user.hasMany(db.post, {
+    onDelete: "cascade",
+})
 
 db.user.hasMany(db.comment)
 

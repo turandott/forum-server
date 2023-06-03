@@ -1,7 +1,7 @@
 const controller = require('../controllers/userController');
 const router = require('express').Router();
-const express=require('express');
-const {signup, login} = controller;
+const express = require('express');
+const { signup, login } = controller;
 const userAuth = require('../middleware/userAuth');
 // CRUD Routes /users
 
@@ -104,6 +104,8 @@ const userAuth = require('../middleware/userAuth');
 router.get('/', controller.getUsers); // /users
 
 
+
+
 /**
  * @swagger
  * /users/{userId}:
@@ -132,6 +134,39 @@ router.get('/', controller.getUsers); // /users
  */
 
 router.get('/:userId', controller.getUser); // /users/:userId
+
+/**
+ * @swagger
+ * /users/{userId}/posts:
+ *   get:
+ *     summary: Get all posts from a user
+ *     tags: [Users]
+ *     description: Retrieve all posts from the database that have a userId matching the provided userId.
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Numeric ID of the user to retrieve posts for
+ *     responses:
+ *       '200':
+ *         description: A list of posts from the user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 posts:
+ *                   type: array
+ *       '404':
+ *         description: No posts found for the user
+ *          
+ */
+
+router.get('/users/:userId/posts', controller.getUsersPosts);
+
+
 
 /**
  * @swagger
@@ -285,6 +320,6 @@ router.post('/signup', userAuth.saveUser, signup)
 */
 
 //login route
-router.post('/login', login )
+router.post('/login', login)
 
 module.exports = router;
