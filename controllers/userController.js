@@ -2,6 +2,7 @@ const db = require('../models');
 const User = db.user;
 const Post = db.post;
 const Password = db.password;
+const Comment= db.comment;
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -112,19 +113,35 @@ exports.getUser = (req, res, next) => {
         include: [{
             model: Password,
             attributes: ['password']
-        }]
+        },
+        {
+            model: Post,
+            attributes: ['title', 'text']
+        },
+        {
+            model: Comment,
+            attributes: ['text']
+        }
+        ]
     })
         .then(user => {
             if (!user) {
-                return res.status(404).json({ message: 'User no found' });
+                return res.status(404).json({ message: 'User not found' });
             }
             user.getPassword().then(password => {
                 console.log(password);
+            })
+            user.getPosts().then(posts => {
+                console.log(posts);
+            })
+            user.getComments().then(comments => {
+                console.log(comments);
             })
             res.status(200).json({ user: user });
         })
         .catch(err => console.log(err));
 }
+
 
 exports.createUser = (req, res, next) => {
     const firstName = req.body.firstName;
@@ -161,15 +178,26 @@ exports.createUser = (req, res, next) => {
 
 //get all user posts
 exports.getUsersPosts = (req, res, next) => {
-    Post.findAll({ where: { userId: req.params.userId } })
+    const userId = req.params.userId;
+    Post.findAll({
+        where: {
+            authorId: 2
+        }
+    })
         .then(posts => {
             if (!posts || posts.length === 0) {
                 return res.status(404).json({ message: 'No posts found for user' });
             }
-
-            res.status(200).json({ posts: posts });
         })
-        .catch(err => console.log(err));
+    // Post.findAll({ where: { userId: userId } })
+    //     .then(posts => {
+    //         if (!posts || posts.length === 0) {
+    //             return res.status(404).json({ message: 'No posts found for user' });
+    //         }
+
+    //         res.status(200).json({ posts: posts });
+    //     })
+    //     .catch(err => console.log(err));
 };
 
 

@@ -5,14 +5,7 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
             type: DataTypes.TEXT,
             allowNull: false,
         },
-        // userId: {
-        //     type: DataTypes.INTEGER,
-        //     allowNull: false,
-        // },
-        // commentId: {
-        //     type: DataTypes.INTEGER,
-        //     allowNull: false,
-        // },
+
     });
     return Comment;
 }

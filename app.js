@@ -6,8 +6,6 @@ const User = require('./models/User');
 const swaggerUI = require('swagger-ui-express');
 const swaggerJsDoc = require('swagger-jsdoc');
 const cookieParser = require('cookie-parser');
-const userRoutes = require('./routes/users');
-const postRoutes = require('./routes/posts');
 const PORT = process.env.PORT || 8080
 const db = require('./models');
 
