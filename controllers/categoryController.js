@@ -2,6 +2,7 @@ const db = require('../models');
 const User = db.user;
 const Post = db.post;
 const Category = db.category;
+const PostToCategory = db.post_category;
 
 
 
@@ -93,3 +94,26 @@ exports.deleteCategory = (req, res, next) => {
         })
         .catch(err => console.log(err));
 }
+
+exports.findPostsByCategory = async (req, res, next) => {
+    try {
+        const categoryName = req.params.categoryName;
+        const category = await Category.findOne({ where: { name: categoryName } });
+        if (!category) {
+            return res.status(404).json({ message: 'Category not found' });
+        }
+        const posts_category = await PostToCategory.findAll({
+            where: { categoryId: category.id },
+            attributes: ['postId']
+        });
+        const ids = []
+        for (let i = 0; i < posts_category.length; i++) {
+            ids.push(posts_category[i].postId);
+
+        }
+        const posts = await Post.findAll({ where: { id: ids } })
+        res.json(posts);
+    } catch (error) {
+        next(error);
+    }
+};

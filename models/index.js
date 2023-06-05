@@ -14,7 +14,8 @@ db.user = require("./User.js")(sequelize, Sequelize, Sequelize.DataTypes);
 db.password = require("./Password.js")(sequelize, Sequelize, Sequelize.DataTypes);
 db.post = require("./Post.js")(sequelize, Sequelize, Sequelize.DataTypes);
 db.comment = require("./Comment.js")(sequelize, Sequelize, Sequelize.DataTypes);
-db.category = require("./Category")(sequelize, Sequelize, Sequelize.DataTypes);
+db.category = require("./Category.js")(sequelize, Sequelize, Sequelize.DataTypes);
+db.post_category = require("./Post_Category.js")(sequelize, Sequelize, Sequelize.DataTypes);
 
 db.user.hasOne(db.password, {
     onDelete: "cascade",
@@ -31,12 +32,13 @@ db.user.hasMany(db.comment)
 db.post.hasMany(db.comment)
 
 db.post.belongsToMany(db.category, {
-    through: "post_category",
+    through: db.post_category,
     foreignKey: "postId",
     otherKey: "categoryId",
 })
+
 db.category.belongsToMany(db.post, {
-    through: "post_category",
+    through: db.post_category,
     foreignKey: "categoryId",
     otherKey: "postId",
 })

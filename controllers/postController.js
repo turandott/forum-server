@@ -1,6 +1,10 @@
 const db = require('../models');
 const User = db.user;
 const Post = db.post;
+const Comment = db.comment;
+const Category = db.category;
+const PostToCategory = db.post_category;
+
 
 
 
@@ -21,7 +25,14 @@ exports.getPosts = (req, res, next) => {
 //get post by id
 exports.getPost = (req, res, next) => {
     const postId = req.params.postId;
-    Post.findByPk(postId)
+    Post.findByPk(postId, {
+        include: [{
+
+            model: Comment,
+            attributes: ['text']
+        }
+        ]
+    })
         .then(post => {
             if (!post) {
                 return res.status(404).json({ message: 'Post no found' });
@@ -36,22 +47,29 @@ exports.getPost = (req, res, next) => {
 exports.createPost = (req, res, next) => {
     const title = req.body.title;
     const text = req.body.text;
-    const userId = req.body.userId; // assuming userId is provided in the request body
+    const userId = req.body.userId;
+    const categoryId = req.body.categoryId;
+    const postId = req.body.postId;
+
     db.post.create({
         title: title,
         text: text,
         userId: userId,
     })
-        .then(result => {
+        .then((post) => {
+            return post.addCategories(categoryId, postId);
+        })
+        
+        .then((result) => {
             res.status(201).json({
                 message: 'Post created successfully!',
-                post: result
+                post: result,
             });
         })
-        .catch(error => {
+        .catch((error) => {
             console.log(error);
             res.status(500).json({
-                message: 'Post creation failed!'
+                message: 'Post creation failed!',
             });
         });
 };
@@ -77,6 +95,32 @@ exports.updatePost = (req, res, next) => {
 }
 
 
+
+exports.getUsersPosts = (req, res, next) => {
+
+    Post.findAll()
+        .then(posts => {
+
+            if (!posts) {
+                return res.status(404).json({ message: 'Posts not found' });
+            }
+            res.status(200).json({ posts: posts });
+        })
+        .catch(err => console.log(err));
+    // const userId = req.params.userId;
+
+    // Post.findAll({ where: { userId: userId } })
+    //     .then(posts => {
+    //         if (!posts || posts.length === 0) {
+    //             return res.status(404).json({ message: 'No posts found for user' });
+    //         }
+
+    //         res.status(200).json({ posts: posts });
+    //     })
+    //     .catch(err => console.log(err));
+};
+
+
 exports.deletePost = (req, res, next) => {
     const postId = req.params.postId;
     Post.findByPk(postId)
@@ -95,3 +139,4 @@ exports.deletePost = (req, res, next) => {
         })
         .catch(err => console.log(err));
 }
+

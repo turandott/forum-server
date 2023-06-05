@@ -188,4 +188,26 @@ router.put('/:categoryId', controller.updateCategory);
 router.delete('/:categoryId', controller.deleteCategory);
 
 
+/**
+ * @swagger
+ * /categories/{categoryName}/posts:
+ *   get:
+ *     summary: Get posts by category name
+ *     tags: [Categories]
+ *     parameters:
+ *       - in: path
+ *         name: categoryName
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Name of the category to filter posts by
+ *     responses:
+ *       '200':
+ *         description: A list of posts that belong to the specified category
+ *       '404':
+ *         description: Category not found
+ */
+router.get('/:categoryName/posts', controller.findPostsByCategory);
+
+
 module.exports = router;

@@ -1,4 +1,6 @@
 const controller = require('../controllers/userController');
+const controllerPost = require('../controllers/postController');
+
 const router = require('express').Router();
 const express = require('express');
 const { signup, login } = controller;
@@ -135,36 +137,6 @@ router.get('/', controller.getUsers); // /users
 
 router.get('/:userId', controller.getUser); // /users/:userId
 
-/**
- * @swagger
- * /users/{userId}/posts:
- *   get:
- *     summary: Get all posts from a user
- *     tags: [Users]
- *     description: Retrieve all posts from the database that have a userId matching the provided userId.
- *     parameters:
- *       - in: path
- *         name: userId
- *         required: true
- *         schema:
- *           type: integer
- *         description: Numeric ID of the user to retrieve posts for
- *     responses:
- *       '200':
- *         description: A list of posts from the user
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 posts:
- *                   type: array
- *       '404':
- *         description: No posts found for the user
- *          
- */
-
-router.get('/users/:userId/posts', controller.getUsersPosts);
 
 
 
@@ -256,6 +228,49 @@ router.put('/:userId', controller.updateUser); // /users/:userId
 
 
 router.delete('/:userId', controller.deleteUser); // /users/:userId
+
+
+/**
+ * @swagger
+ * /users/{userId}/posts:
+ *   get:
+ *     summary: Get all posts from a user
+ *     tags: [Users]
+ *     description: Retrieve all posts from the database that have a userId matching the provided userId.
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *         description: Numeric ID of the user to retrieve posts for
+ *     responses:
+ *       '200':
+ *         description: A list of posts from the user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 posts:
+ *                   type: array
+ *       '404':
+ *         description: No posts found for the user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ */
+
+router.get('/users/{userId}/posts', controller.getUsersPosts);
+
+
+
+
 
 
 /**
