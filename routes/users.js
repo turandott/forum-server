@@ -3,8 +3,7 @@ const controllerPost = require('../controllers/postController');
 
 const router = require('express').Router();
 const express = require('express');
-const { signup, login } = controller;
-const userAuth = require('../middleware/userAuth');
+// const userAuth = require('../middleware/userAuth');
 // CRUD Routes /users
 
 
@@ -273,68 +272,6 @@ router.get('/users/{userId}/posts', controller.getUsersPosts);
 
 
 
-/**
-* @swagger
-* tags:
-*   name: Authorization
-*   description: User management
-*/
 
-/**
- * @swagger
- * /signup:
- *   post:
- *     summary: Create a new user account
- *     tags: [Authorization]
- *     consumes:
- *       - application/json
- *     produces:
- *       - application/json
- *     parameters:
- *       - in: body
- *         name: user
- *         description: The user to create.
- *         schema:
- *           $ref: '#/definitions/User'
- *     responses:
- *       '200':
- *         description: User created successfully.
- *       '400':
- *         description: Invalid request body.
- */
-
-
-//signup endpoint
-//passing the middleware function to the signup
-router.post('/signup', userAuth.saveUser, signup)
-
-
-
-
-/**
-* @swagger
-* /login:
-*    post:
-*      summary: Authenticate a user and return a JWT token.
-*      tags: [Authorization]
-*      consumes:
-*        - application/json
-*      produces:
-*        - application/json
-*      parameters:
-*        - in: body
-*          name: credentials
-*          description: The user's login credentials.
-*          schema:
-*            $ref: '#/definitions/LoginCredentials'
-*      responses:
-*        '200':
-*          description: JWT token returned successfully.
-*        '401':
-*          description: Invalid login credentials.
-*/
-
-//login route
-router.post('/login', login)
 
 module.exports = router;

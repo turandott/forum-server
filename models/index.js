@@ -16,6 +16,7 @@ db.post = require("./Post.js")(sequelize, Sequelize, Sequelize.DataTypes);
 db.comment = require("./Comment.js")(sequelize, Sequelize, Sequelize.DataTypes);
 db.category = require("./Category.js")(sequelize, Sequelize, Sequelize.DataTypes);
 db.post_category = require("./Post_Category.js")(sequelize, Sequelize, Sequelize.DataTypes);
+db.role = require("./Role.js")(sequelize, Sequelize, Sequelize.DataTypes);
 
 db.user.hasOne(db.password, {
     onDelete: "cascade",
@@ -57,5 +58,7 @@ db.user.belongsToMany(db.user, {
     as: 'followers',
 
 })
+
+db.role.hasMany(db.user)
 
 module.exports = db;

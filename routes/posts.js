@@ -23,6 +23,9 @@ const express=require('express');
  *        userId:
  *          type: integer
  *          example: 1
+ *        categoryId:
+ *          type: integer
+ *          example: 1
  *        
  */
 
@@ -35,6 +38,8 @@ const express=require('express');
 *      title: 
 *        type: string
 *      text:
+*        type: string
+*       category: 
 *        type: string
 *    required:
 *      - title
@@ -104,7 +109,41 @@ router.get('/', controller.getPosts);
 
 router.get('/:postId', controller.getPost);
 
+/**
+ * @swagger
+ * /users/{userId}/posts:
+ *   get:
+ *     summary: Get all posts from a user
+ *     tags: [Posts]
+ *     description: Retrieve all posts from the database that have a userId matching the provided userId.
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         schema:
+ *           type: integer
+ *         description: Numeric ID of the user to retrieve posts for
+ *     responses:
+ *       '200':
+ *         description: A list of posts from the user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 posts:
+ *                   type: array
+ *       '404':
+ *         description: No posts found for the user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ */
 
+router.get('/users/{userId}/posts', controller.getUsersPosts);
 
 /**
  * @swagger
