@@ -160,6 +160,7 @@ router.get('/current_user', authMiddleware, controller.getCurrentUser)
 * @swagger
 * /auth/users:
  *   get:
+ *     summary: Get the list of users(for admin only)
  *     description: Retrieve a list of all users(only for administarator) 
  *     tags: 
  *       - Authorization

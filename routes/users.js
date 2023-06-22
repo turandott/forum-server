@@ -239,33 +239,17 @@ router.delete('/:userId', controller.deleteUser); // /users/:userId
  *     parameters:
  *       - in: path
  *         name: userId
- *         required: true
  *         schema:
- *           type: integer
- *           minimum: 1
- *         description: Numeric ID of the user to retrieve posts for
+ *          type: number
+ *          required: true
  *     responses:
  *       '200':
  *         description: A list of posts from the user
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 posts:
- *                   type: array
  *       '404':
  *         description: No posts found for the user
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
  */
 
-router.get('/users/{userId}/posts', controller.getUsersPosts);
+router.get('/:userId/posts', controller.getUsersPosts);
 
 
 
