@@ -127,7 +127,60 @@ router.post('/registration', [
 
 router.post('/login', controller.login)
 
+/**
+ * @swagger
+ * /auth/current_user:
+ *   get:
+ *     summary: Get the current logged in user
+ *     tags:
+ *       - Authorization
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       '200':
+ *         description: Successfully retrieved the current user.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 name:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ *       '401':
+ *         description: Unauthorized access, user not authenticated.
+ */
+router.get('/current_user', authMiddleware, controller.getCurrentUser)
 
-router.get('/users', controller.getUsers)
+
+/**
+* @swagger
+* /auth/users:
+ *   get:
+ *     description: Retrieve a list of all users(only for administarator) 
+ *     tags: 
+ *       - Authorization
+ *     security:
+ *      - bearerAuth: []
+ *     responses:
+ *       '200':
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/User'
+ *       '401':
+ *         description: Unauthorized access. Authentication required.
+ *       '403':
+ *         description: The authenticated user does not have the necessary permissions to access this resource.
+ */
+router.get('/users', roleMiddleware(["ADMIN"]), controller.getUsers)
+
+
 
 module.exports = router

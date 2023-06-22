@@ -71,13 +71,32 @@ class authController {
         }
     }
 
+    async getCurrentUser(req, res) {
+        try {
+            const token = req.headers.authorization.split(' ')[1];
+            if (!token) {
+                return res.status(401).json({ message: 'Требуется авторизация' });
+            }
+            const decodedToken = jwt.verify(token, secret);
+            const userId = decodedToken.id;
+            const user = await User.findByPk(userId);
+            if (!user) {
+                return res.status(401).json({ message: 'Пользователь не найден' });
+            }
+            res.json(user);
+        } catch (e) {
+            console.log(e);
+            res.status(401).json({ message: 'Ошибка при получении текущего пользователя' });
+        }
+    }
+
     async getUsers(req, res) {
 
         try {
             // const userRole= Role.create();
             // const adminRole=Role.create({name: "ADMIN"})
             // res.json("server work")
-            const users = await User.find()
+            const users = await User.findAll()
             res.json(users)
         } catch (e) {
             console.log(e)
