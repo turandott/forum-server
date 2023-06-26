@@ -16,8 +16,9 @@ module.exports = function (roles) {
             
             const token = authHeader.split(' ')[1]
             const { roles: userRoles } = jwt.verify(token, secret)
-            
-            const hasRole = userRoles.includes(role)
+
+            const hasRole = userRoles.includes(roles)
+
             if (!hasRole) {
               return res.status(403).json({ message: 'У вас нет доступа' })
             }
